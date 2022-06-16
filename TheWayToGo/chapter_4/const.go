@@ -7,7 +7,7 @@ package main
 const b string = "abc" // 显式定义
 const d = "abc"        // 隐式定义
 
-func main() {
+func main1() {
 	const Ln2 = 0.693147180559945309417232121458
 	const Log2E = 1 / Ln2 // this is a precise reciprocal
 	const Billion = 1e9   // float constant

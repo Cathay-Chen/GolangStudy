@@ -14,7 +14,7 @@ type T struct {
 func init() { // initialization of package
 }
 
-func main() {
+func main3() {
 	var a int
 	a = 1
 	// 只能在定义正确的情况下转换成功，例如从一个取值范围较小的类型转换到一个取值范围较大的类型（例如将 int16 转换为 int32）。

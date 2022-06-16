@@ -44,7 +44,7 @@ import (
 //	func main must have no arguments and no return values results.
 // ```
 // 在程序开始执行并完成初始化后，第一个调用（程序的入口点）的函数是 main.main()（如：C 语言），该函数一旦返回就表示程序已成功执行并立即退出。
-func main() {
+func main2() {
 
 	// 包内大写字母开头方法和变量名，外部可以访问。 小写字母开头的只能内部访问
 	fmt.Println("hello, world")
