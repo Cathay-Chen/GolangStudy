@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // Go 也有基于架构的类型，例如：int、uint 和 uintptr。
 //
