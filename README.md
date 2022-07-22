@@ -1,8 +1,8 @@
-# GolangStudy
+# 🐹 GolangStudy
 
-> Code in the process of learning golang.
+👩‍💻 Code in the process of learning golang.
 
-## Source of learning projects
+## 📗 Source of learning projects
 
 - [Go By Example](https://gobyexample-cn.github.io/)
 - [The Way To Go](https://github.com/unknwon/the-way-to-go_ZH_CN)
