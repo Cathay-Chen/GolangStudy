@@ -1,6 +1,6 @@
-# 🐹 GolangStudy
+# Golang Study
 
-👩‍💻 Code in the process of learning golang.
+🐹 Code in the process of learning golang.
 
 ## 📗 Source of learning projects
 
