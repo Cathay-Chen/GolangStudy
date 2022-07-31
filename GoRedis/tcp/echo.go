@@ -2,11 +2,18 @@ package main
 
 import (
 	"bufio"
+	"context"
 	"fmt"
 	"io"
 	"log"
 	"net"
 )
+
+// Handler 是应用层服务器的抽象
+type Handler interface {
+	Handle(ctx context.Context, con net.Conn)
+	Close() error
+}
 
 func ListenAndServe(address string) {
 	// 绑定监听地址
@@ -18,9 +25,11 @@ func ListenAndServe(address string) {
 
 	defer func(listener net.Listener) {
 		err := listener.Close()
+
 		if err != nil {
 			log.Fatal(fmt.Sprintf("listen close err: %v", err))
 		}
+
 	}(listener)
 
 	log.Println(fmt.Sprintf("bind: %s, start listening...", address))
