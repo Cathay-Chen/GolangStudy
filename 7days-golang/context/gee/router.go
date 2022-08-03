@@ -13,32 +13,19 @@ type router struct {
 	handlers map[string]HandlerFunc
 }
 
-// getHandlesKey
-// @Description: 获取 router.handlers 的 key
-// @receiver r
-// @param method
-// @param pattern
-// @return string
+// getHandlesKey 获取 router.handlers 的 key
 func (r router) getHandlesKey(method string, pattern string) string {
 	return method + "-" + pattern
 }
 
-// addRoute
-// @Description: 添加路由
-// @receiver r
-// @param method
-// @param pattern
-// @param handler
+// addRoute 添加路由
 func (r *router) addRoute(method string, pattern string, handler HandlerFunc) {
 	log.Printf("Route %4s - %s", method, pattern)
 	key := r.getHandlesKey(method, pattern)
 	r.handlers[key] = handler
 }
 
-// handle
-// @Description: 根据请求的 Context 获取请求的处理方法并执行
-// @receiver r
-// @param c
+// handle 根据请求的 Context 获取请求的处理方法并执行
 func (r *router) handle(c *Context) {
 	key := r.getHandlesKey(c.Method, c.Path)
 
@@ -49,9 +36,7 @@ func (r *router) handle(c *Context) {
 	}
 }
 
-// newRouter
-// @Description: 初始化 router
-// @return *router
+// newRouter 初始化 router
 func newRouter() *router {
 	return &router{handlers: make(map[string]HandlerFunc)}
 }

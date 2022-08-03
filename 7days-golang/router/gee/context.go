@@ -17,11 +17,20 @@ type H map[string]interface{}
 // 提供了访问 Query 和 PostForm 参数的方法。
 // 提供了快速构造 String Data JSON HTML 响应的方法。
 type Context struct {
-	Writer     http.ResponseWriter
-	Req        *http.Request
-	Path       string
-	Method     string
+	Writer http.ResponseWriter
+	// request info
+	Req    *http.Request
+	Path   string
+	Method string
+	Params map[string]string
+
+	// response info
 	StatusCode int
+}
+
+func (c *Context) Param(key string) string {
+	value, _ := c.Params[key]
+	return value
 }
 
 // PostForm FormValue 返回查询的命名组件的第一个值。
