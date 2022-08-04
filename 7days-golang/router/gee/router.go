@@ -23,7 +23,7 @@ func (r router) getHandlesKey(method string, pattern string) string {
 // addRoute 添加路由
 func (r *router) addRoute(method string, pattern string, handler HandlerFunc) {
 	log.Printf("Route %4s - %s", method, pattern)
-	parts := parsePattern(pattern)
+	parts := parsePattern(pattern) // 可以把这个逻辑放入 node.insert 中
 
 	if _, ok := r.roots[method]; !ok {
 		r.roots[method] = &node{}
@@ -34,6 +34,7 @@ func (r *router) addRoute(method string, pattern string, handler HandlerFunc) {
 	r.handlers[key] = handler
 }
 
+// getRoute 获取路由信息
 func (r *router) getRoute(method string, path string) (*node, map[string]string) {
 	searchParts := parsePattern(path)
 	params := make(map[string]string)
@@ -46,7 +47,7 @@ func (r *router) getRoute(method string, path string) (*node, map[string]string)
 	n := root.search(searchParts, 0)
 
 	if n != nil {
-		parts := parsePattern(path)
+		parts := parsePattern(n.pattern)
 
 		for index, part := range parts {
 			if part[0] == ':' {
@@ -64,13 +65,23 @@ func (r *router) getRoute(method string, path string) (*node, map[string]string)
 	return nil, nil
 }
 
+func (r *router) getRoutes(method string) []*node {
+	root, ok := r.roots[method]
+	if !ok {
+		return nil
+	}
+	nodes := make([]*node, 0)
+	root.travel(&nodes)
+	return nodes
+}
+
 // handle 根据请求的 Context 获取请求的处理方法并执行
 func (r *router) handle(c *Context) {
 	n, params := r.getRoute(c.Method, c.Path)
 
 	if n != nil {
 		c.Params = params
-		key := r.getHandlesKey(c.Method, c.Path)
+		key := r.getHandlesKey(c.Method, n.pattern)
 		r.handlers[key](c)
 	} else {
 		c.String(http.StatusNotFound, "404 NOT FOUND: %s\n", c.Path)
@@ -85,6 +96,7 @@ func newRouter() *router {
 	}
 }
 
+// parsePattern 根据规则拆解路由
 func parsePattern(pattern string) []string {
 	vs := strings.Split(pattern, "/")
 	parts := make([]string, 0)
