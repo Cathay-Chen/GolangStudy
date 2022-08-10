@@ -2,6 +2,7 @@ package gee
 
 import (
 	"net/http"
+	"strings"
 )
 
 // HandlerFunc 路由匹配成功后执行的方法
@@ -12,8 +13,10 @@ type HandlerFunc func(c *Context)
 type (
 	// RouterGroup 组路由
 	RouterGroup struct {
-		prefix string
-		engine *Engine
+		prefix      string
+		engine      *Engine
+		middlewares []HandlerFunc // support middleware
+		parent      *RouterGroup
 	}
 
 	// Engine 引擎
@@ -21,6 +24,7 @@ type (
 		// router map[string]HandlerFunc
 		router *router
 		*RouterGroup
+		groups []*RouterGroup
 	}
 )
 
@@ -29,16 +33,26 @@ func New() *Engine {
 	// return &Engine{router: make(map[string]HandlerFunc)}
 	engine := &Engine{router: newRouter()}
 	engine.RouterGroup = &RouterGroup{engine: engine}
+	engine.groups = []*RouterGroup{engine.RouterGroup}
 	return engine
 }
 
 // Group 创建一个分组
 func (group *RouterGroup) Group(prefix string) *RouterGroup {
+	engine := group.engine
 	// 需要满足 group 后可以继续 group，所以重新 new
-	return &RouterGroup{
+	newGroup := &RouterGroup{
 		prefix: group.prefix + prefix,
 		engine: group.engine,
+		parent: group,
 	}
+	engine.groups = append(engine.groups, newGroup)
+	return newGroup
+}
+
+// Use 添加中间件到群结构体
+func (group *RouterGroup) Use(middlewares ...HandlerFunc) {
+	group.middlewares = append(group.middlewares, middlewares...)
 }
 
 // addRoute 添加路由
@@ -73,7 +87,14 @@ func (engine *Engine) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	//} else {
 	//	fmt.Fprintf(w, "404 NOT FOUND: %s\n", req.URL)
 	//}
+	var middlewares []HandlerFunc
+	for _, group := range engine.groups {
+		if strings.HasPrefix(req.URL.Path, group.prefix) {
+			middlewares = append(middlewares, group.middlewares...)
+		}
+	}
 
 	c := newContext(w, req)
+	c.handlers = middlewares
 	engine.router.handle(c)
 }
