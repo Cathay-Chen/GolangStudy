@@ -16,7 +16,7 @@ func onlyForV2() gee.HandlerFunc {
 		t := time.Now()
 		c.Fail(500, "Internal Server Error")
 		// time.Since() 经过的时间
-		log.Print("[%d] %s in $v for group v2", c.StatusCode, c.Req.RequestURI, time.Since(t))
+		log.Printf("[%d] %s in %v for group v2", c.StatusCode, c.Req.RequestURI, time.Since(t))
 	}
 }
 

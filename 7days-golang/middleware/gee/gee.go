@@ -65,12 +65,12 @@ func (group *RouterGroup) addRoute(method string, pattern string, handler Handle
 
 // GET 添加一个 get 请求路由
 func (group *RouterGroup) GET(pattern string, handler HandlerFunc) {
-	group.engine.addRoute("GET", pattern, handler)
+	group.addRoute("GET", pattern, handler)
 }
 
 // POST 添加一个 post 请求
 func (group *RouterGroup) POST(pattern string, handler HandlerFunc) {
-	group.engine.addRoute("POST", pattern, handler)
+	group.addRoute("POST", pattern, handler)
 }
 
 // Run 启动一个 http 服务

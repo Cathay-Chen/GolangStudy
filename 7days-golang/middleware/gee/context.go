@@ -31,17 +31,19 @@ type Context struct {
 
 	// middleware
 	handlers []HandlerFunc
-	index    int
+	index    int // 用来存储已执行的 handles 中的 HandlerFunc 或者 控制哪些执行
 }
 
+// Next 控制顺序执行 HandlerFunc
 func (c *Context) Next() {
-	c.index++
+	c.index++ // 跟下面的 Fail 方法配合，跳过某些执行
 	s := len(c.handlers)
 	for ; c.index < s; c.index++ {
 		c.handlers[c.index](c)
 	}
 }
 
+// Fail 返回错误信息
 func (c *Context) Fail(code int, err string) {
 	c.index = len(c.handlers)
 	c.JSON(code, H{"message": err})
