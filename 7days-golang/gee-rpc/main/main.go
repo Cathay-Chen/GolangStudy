@@ -40,6 +40,7 @@ func main() {
 	}()
 
 	time.Sleep(1 * time.Second)
+	// 处理请求的时候，会判断 option 格式
 	_ = json.NewEncoder(conn).Encode(geerpc.DefaultOption)
 	cc := codec.NewGobCodec(conn)
 
@@ -49,11 +50,12 @@ func main() {
 			Seq:           uint64(i),
 		}
 
+		// 发送消息
 		_ = cc.Write(h, fmt.Sprintf("geerpc req %d", h.Seq))
 		_ = cc.ReadHeader(h)
 		var reply string
 		_ = cc.ReadBody(&reply)
-		log.Println("reply:", reply)
+		log.Println("返回的 rep 头和内容：", h, reply)
 	}
 }
 
