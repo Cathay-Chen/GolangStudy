@@ -19,7 +19,7 @@ type GobCodec struct {
 }
 
 // 检查 GobCodec 是否实现了 Codec
-// var _Codec = (*GobCodec)(nil)
+var _ Codec = (*GobCodec)(nil)
 
 func NewGobCodec(conn io.ReadWriteCloser) *GobCodec {
 	buf := bufio.NewWriter(conn)

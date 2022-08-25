@@ -20,7 +20,7 @@ const MagicNumber = 0x3bef5c
 type Option struct {
 	// MagicNumber 标记一个请求
 	MagicNumber int
-	// 消息编码类型
+	// CodecType 消息编码类型
 	CodecType codec.Type
 }
 
